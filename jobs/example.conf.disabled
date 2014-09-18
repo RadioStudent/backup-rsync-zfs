@@ -1,6 +1,8 @@
 #
 # Backup source parameters
 #
+# currently only for rsyncd, you need to figure out how to do SSH etc, since we're not using it.
+#
 # rsync URL
 SRC=rsync://backup@server.example.com
 # rsyndc module
@@ -15,4 +17,4 @@ export RSYNC_PASSWORD=changeme
 # Backup destination - name of ZFS dataset
 DSTSET=backuppool/backups/example_server
 
-RSYNCCMD="rsync --dry-run -avx --numeric-ids --inplace"
+RSYNCCMD="rsync --dry-run -avx --numeric-ids --inplace" # add --delete and remove --dry-run at your own peril...
