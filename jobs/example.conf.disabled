@@ -1,7 +1,12 @@
 #
 # Backup source parameters
 #
-# currently only for rsyncd, you need to figure out how to do SSH etc, since we're not using it.
+# currently only for rsyncd, you need to figure out how to do SSH etc, since
+# we're not using it.
+#
+# Destination directory has to contain file called BACKUPTEST containing the
+# destination ZFS dataset name. Otherwise people might blow their root
+# filesystems because of erorrs... Don't ask how I know.
 #
 # rsync URL
 SRC=rsync://backup@server.example.com
