@@ -45,7 +45,7 @@ else
 fi
 
 # create zip attachment with the logs
-zip ${LOGDIR}/${TIMESTAMP}-logs.zip ${LOGDIR}/jobs/*-${TIMESTAMP}.log && \
+zip -j ${LOGDIR}/${TIMESTAMP}-logs.zip ${LOGDIR}/jobs/*-${TIMESTAMP}.log && \
   rm -f ${LOGDIR}/jobs/*-{TIMESTAMP}.log
 
 if [ ! -z $MAIL_RECIPS ]; then
