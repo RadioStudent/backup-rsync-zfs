@@ -1,0 +1,20 @@
+rs-backup: a simple tool to backup remote servers to ZFS storage with snapshots
+
+Setup:
+
+1. clone the repository
+2. create backup job configuration files in /jobs. See example in that
+   directory. Filenames must end with .conf to be executed.
+3. create /var/log/rs-backup/jobs
+4. run rs-backup.sh
+
+On remote machines you need to run rsyncd and allow access from the backup
+machine ONLY!
+Exclusions are configured on machines themselves.
+
+We welcome questions, ideas, pull requests >:'> etc.
+
+In the future i'd like this to be a backupninja module, but did not have time
+to figure it out, therefore this little hack.
+
+Borut Mrak, 2014-09-18
