@@ -16,8 +16,11 @@
 MAIL_RECIPS=""
 TIMESTAMP=`date +%Y%m%d-%H%M%S`
 
-if [ -r "`dirname $0`/rs-backup.conf" ]; then
-  . "`dirname $0`/rs-backup.conf"
+MYDIR=`dirname $0`
+cd $MYDIR
+
+if [ -r "$MYDIR/rs-backup.conf" ]; then
+  . "$MYDIR/rs-backup.conf"
 fi
 
 LOGDIR=/var/log/rs-backups
@@ -31,8 +34,6 @@ if [ ! -z $1 -a $1 == "-q" ]; then
   Q=1
 fi
   
-MYDIR=`dirname $0`
-cd $MYDIR
 
 
 
