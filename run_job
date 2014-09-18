@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# Backup remote servers via rsync to a zfs dataset and snapshot it when done.
+#
+
+
+#
+# Common settings
+#
+# set this to container root or leave empty if running outside container
+CTROOT=/var/lib/lxc/backups/rootfs
+
+if [ $# -lt 1 ]; then
+  echo "ERROR: insufficient paramaters. This command requires a job conf file"
+  echo "as the first parameter on the command line."
+  exit 1
+fi
+
+if [ ! -r $1 ]; then
+  echo "ERROR: config file $1 is not readable."
+  exit 2
+fi
+
+TIMESTAMP=`date +%Y-%m-%d-%H%M`
+
+source $1
+
+DATASETMOUNT=`zfs get -H -o value mountpoint $DSTSET`
+if [ $? -ne 0 -o -z "${DATASETMOUNT}" ]; then
+  echo "ERROR: dataset $DSTSET doesn't exist or is not mounted."
+  exit 3
+fi
+
+
+
+# unset CTROOT if it's /... no need to cut off the first slash from
+# destination directory if we're not in a container.
+if [[ $CTROOT == '/' ]]; then
+  unset CTROOT
+fi
+
+if [[ $DATASETMOUNT != ${CTROOT}* ]]; then
+  echo "dataset is not in this container, check configuration"
+  exit 4
+fi
+
+DST=${DATASETMOUNT/${CTROOT}}
+
+if [ ! -r ${DST}/BACKUPTEST ]; then
+  echo "${DST}/BACKUPTEST not readable, please check..."
+  exit 5
+elif ! grep -q ${DSTSET} ${DST}/BACKUPTEST; then
+  echo "${DST}/BACKUPTEST does not contain ${DSTSET}... something is wrong, please check."
+  exit 5
+fi
+
+for SRCMNT in $SRCMNTS; do
+  echo "START ${SRC}${SRCMNT}/ -> ${DST}/${SRCMNT}/..."
+  $RSYNCCMD ${SRC}/${SRCMODULE}${SRCMNT}/ ${DST}/${SRCMNT}/
+  echo -e "\n\n\n"
+done
+
+echo "doing zfs-auto-snapshot $DSTSET..."
+zfs-auto-snapshot -l backup -k 14 ${DSTSET}
+

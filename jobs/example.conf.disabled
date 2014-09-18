@@ -1,0 +1,18 @@
+#
+# Backup source parameters
+#
+# rsync URL
+SRC=rsync://backup@server.example.com
+# rsyndc module
+SRCMODULE=root
+# list of mountpoins to be backed up.
+# We use rsync -x so we don't have bother with excluding /proc /sys etc.
+# instead we select which mountpoint to backup.
+SRCMNTS="/ /var /srv"
+# rsyncd password
+export RSYNC_PASSWORD=changeme
+
+# Backup destination - name of ZFS dataset
+DSTSET=backuppool/backups/example_server
+
+RSYNCCMD="rsync --dry-run -avx --numeric-ids --inplace"
