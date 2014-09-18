@@ -14,10 +14,6 @@
 #   * mutt (to send mail with attachment)
 #
 MAIL_RECIPS=""
-
-MYDIR=`dirname $0`
-cd $MYDIR
-
 TIMESTAMP=`date +%Y%m%d-%H%M%S`
 
 LOGDIR=/var/log/rs-backups
@@ -26,11 +22,23 @@ if [ ! -d ${LOGDIR} -o ! -d ${LOGDIR}/jobs ]; then
   exit 1
 fi
 
+if [ ! -z $1 -a $1 == "-q" ]; then
+  # quiet - for running from cron etc.
+  Q=1
+fi
+  
+MYDIR=`dirname $0`
+cd $MYDIR
+
+
+
 ERRORS=0
 for job in `ls jobs/*.conf`; do
-  ${MYDIR}/run_job $job | tee -a ${LOGDIR}/${job}-${TIMESTAMP}.log
-  rv=$?
-  if [ $rv -gt 0 ]; then
+  if [ $Q ]; then
+    JOBFLAGS="-q ${LOGDIR}/${job}-${TIMESTAMP}.log"
+  fi
+  ${MYDIR}/run_job $job $JOBFLAGS
+  if [ $? -gt 0 ]; then
     ERRORS=1
   fi
 done
