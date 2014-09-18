@@ -16,6 +16,10 @@
 MAIL_RECIPS=""
 TIMESTAMP=`date +%Y%m%d-%H%M%S`
 
+if [ -r "`dirname $0`/rs-backup.conf" ]; then
+  . "`dirname $0`/rs-backup.conf"
+fi
+
 LOGDIR=/var/log/rs-backups
 if [ ! -d ${LOGDIR} -o ! -d ${LOGDIR}/jobs ]; then
   echo "${LOGDIR}/jobs does not exist. Create it first."

@@ -1,0 +1,3 @@
+# mail recipients. Separate multiple addresses by space.
+MAIL_RECIPS="example@example.com"
+
