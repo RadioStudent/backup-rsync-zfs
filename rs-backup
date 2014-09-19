@@ -19,6 +19,7 @@ TIMESTAMP=`date +%Y%m%d-%H%M%S`
 # cron doesn't add /sbin to path, but we need it and zfs-auto-snapshot needs it.
 if [[ ":${PATH}:" != *":/sbin:"* ]]; then
   PATH=${PATH}:/sbin
+  export PATH
 fi
 
 MYDIR=`dirname $0`
@@ -67,6 +68,6 @@ zip -j ${LOGDIR}/${TIMESTAMP}-logs.zip ${LOGDIR}/jobs/*-${TIMESTAMP}.log && \
   rm -f ${LOGDIR}/jobs/*-{TIMESTAMP}.log
 
 if [ -n "$MAIL_RECIPS" ]; then
-  mutt -s "$mail_subject" "$MAIL_RECIPS" -a ${LOGDIR}/*-${TIMESTAMP}-logs.zip <<< "logs attached"
+  mutt -s "$mail_subject" $MAIL_RECIPS -a ${LOGDIR}/${TIMESTAMP}-logs.zip <<< "logs attached"
 fi
   
